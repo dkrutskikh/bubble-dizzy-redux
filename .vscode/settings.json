@@ -1,0 +1,33 @@
+{
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+    },
+    "cSpell.language": "en,ru",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.organizeImports": true,
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
+    "markdown.validate.enabled": true,
+    "markdown.preview.typographer": true,
+    "markdown.preview.breaks": true,
+    "markdown.validate.fileLinks.enabled": "error",
+    "markdown.validate.fragmentLinks.enabled": "error",
+    "markdown.validate.referenceLinks.enabled": "error",
+    "markdown.validate.duplicateLinkDefinitions.enabled": "error",
+    "markdown.validate.unusedLinkDefinitions.enabled": "error",
+    "markdown.updateLinksOnFileMove.enabled": "prompt",
+    "markdown.occurrencesHighlight.enabled": true,
+    "markdownlint.config": {
+        "no-inline-html": {
+            "allowed_elements": [
+                "img"
+            ]
+        }
+    },
+    "workbench.editorAssociations": {
+        "*.md": "vscode.markdown.preview.editor",
+    }
+}
