@@ -25,11 +25,11 @@ func _calculateWindowSize(fullScreen : bool, screenSize : Vector2) -> Vector2:
   var widthHeight = screenSize;
   if (!fullScreen):
     widthHeight *= _windowedModeRatio;
-    if (widthHeight.aspect() > _maximumAspectRatio):
-      widthHeight.x = widthHeight.y * _maximumAspectRatio;
-    if (widthHeight.aspect() < _minimumAspectRatio):
-      widthHeight.y = widthHeight.x / _minimumAspectRatio;
-    widthHeight.x = int(widthHeight.x) & ~1;
-    widthHeight.y = int(widthHeight.y) & ~1;
+  if (widthHeight.aspect() > _maximumAspectRatio):
+    widthHeight.x = widthHeight.y * _maximumAspectRatio;
+  if (widthHeight.aspect() < _minimumAspectRatio):
+    widthHeight.y = widthHeight.x / _minimumAspectRatio;
+  widthHeight.x = int(widthHeight.x) & ~1;
+  widthHeight.y = int(widthHeight.y) & ~1;
 
   return widthHeight;
