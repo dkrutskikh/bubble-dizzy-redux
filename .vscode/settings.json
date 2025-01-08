@@ -1,8 +1,7 @@
 {
     "explorer.fileNesting.enabled": true,
     "explorer.fileNesting.expand": false,
-    "explorer.fileNesting.patterns": {
-    },
+    "explorer.fileNesting.patterns": {},
     "cSpell.language": "en,ru",
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",

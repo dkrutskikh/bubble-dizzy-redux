@@ -47,7 +47,7 @@ func _readBlock(file:FileAccess) -> PackedByteArray:
 func loadingImage() -> Image:
 
   var imageData := PackedByteArray([]);
-  imageData.resize(256*192*3);
+  imageData.resize(256*192*4);
 
   for y in 192:
     for x in 256:
@@ -69,8 +69,9 @@ func loadingImage() -> Image:
         g = ((attribute >> 2) & 1) * brightnes;
         b = ((attribute >> 0) & 1) * brightnes;
 
-      imageData.set(pixelIndex * 3 + 0, r);
-      imageData.set(pixelIndex * 3 + 1, g);
-      imageData.set(pixelIndex * 3 + 2, b);
+      imageData.set(pixelIndex * 4 + 0, r);
+      imageData.set(pixelIndex * 4 + 1, g);
+      imageData.set(pixelIndex * 4 + 2, b);
+      imageData.set(pixelIndex * 4 + 3, 255);
 
-  return Image.create_from_data(256, 192, false, Image.FORMAT_RGB8, imageData);
+  return Image.create_from_data(256, 192, false, Image.FORMAT_RGBA8, imageData);

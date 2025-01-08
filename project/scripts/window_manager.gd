@@ -11,7 +11,7 @@ func _ready() -> void:
   switchMode();
 
 func _process(_delta: float) -> void:
-  if Input.is_action_just_pressed("ui_toogle_fullscreen"):
+  if Input.is_action_just_pressed("ui_toggle_fullscreen"):
     switchMode();
 
 func switchMode() -> void:
