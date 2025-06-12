@@ -24,3 +24,5 @@ jobs:
       - name: Check code format
         run: |
           bash tools/builder/check_code_format.sh
+      - name: Check format of markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v20
