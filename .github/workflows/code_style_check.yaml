@@ -26,7 +26,7 @@ jobs:
           bash tools/builder/check_code_format.sh
       - name: Check copyright headers
         run: |
-          bash script/tools/check_copyright_headers.sh
+          bash tools/builder/check_copyright_headers.sh
       - name: Check format of markdown files
         uses: DavidAnson/markdownlint-cli2-action@v20
         with:
