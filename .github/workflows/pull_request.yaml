@@ -45,4 +45,4 @@ jobs:
     name: Code style check
     needs:
       - dispatcher
-    uses: ./.github/workflows/code_style_check.yml
+    uses: ./.github/workflows/code_style_check.yaml
