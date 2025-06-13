@@ -1,5 +1,10 @@
 {
-    "version": 8,
+    "version": 10,
+    "cmakeMinimumRequired": {
+        "major": 4,
+        "minor": 0,
+        "patch": 0
+    },
     "configurePresets": [
         {
             "name": "release-binary-dir",
@@ -7,9 +12,9 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}"
         },
         {
-            "name": "clang",
+            "name": "macos-xcode",
+            "displayName": "XCode",
             "inherits": "release-binary-dir",
-            "displayName": "Clang 17.0.0 arm64-apple-darwin24.5.0",
             "description": "Using compilers: C = /usr/bin/clang, CXX = /usr/bin/clang++",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
@@ -17,6 +22,18 @@
                 "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
                 "CMAKE_BUILD_TYPE": "Debug"
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default-release",
+            "hidden": true,
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "macos-xcode",
+            "configurePreset": "macos-xcode",
+            "inherits": "default-release"
         }
     ]
 }
