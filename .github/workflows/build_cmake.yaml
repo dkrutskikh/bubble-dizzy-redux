@@ -28,6 +28,3 @@ jobs:
     - name: Build
       run: |
         cmake --build --preset ${{ matrix.cmake_preset }}
-    - name: Install
-      run: |
-        sudo cmake --install build
