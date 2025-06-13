@@ -24,7 +24,6 @@ jobs:
       uses: actions/checkout@v4
     - name: Configure
       run: |
-        cmake --version
         cmake --preset ${{ matrix.cmake_preset }}
     - name: Build
       run: |
