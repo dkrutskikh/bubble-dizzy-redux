@@ -1,5 +1,5 @@
 //
-// Copyright 2025 Toyman Interactive
+// Copyright 2025 by Toyman Interactive
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,5 +34,6 @@ int main()
     for ( const string & word : msg ) {
         cout << word << " ";
     }
+
     cout << endl;
 }
