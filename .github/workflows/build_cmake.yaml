@@ -1,0 +1,30 @@
+name: CMake
+
+on:
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  cmake:
+    strategy:
+      matrix:
+        include:
+        - name: macOS
+          os: macos-latest
+          cmake_preset: macos-xcode
+    name: CMake (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Configure
+      run: |
+        cmake --preset ${{ matrix.cmake_preset }}
+    - name: Build
+      run: |
+        cmake --build --preset ${{ matrix.cmake_preset }}
