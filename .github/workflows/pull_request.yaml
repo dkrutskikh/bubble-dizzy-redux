@@ -46,3 +46,11 @@ jobs:
     needs:
       - dispatcher
     uses: ./.github/workflows/code_style_check.yaml
+  codechecker:
+    name: CodeChecker
+    needs:
+      - dispatcher
+      - style
+    uses: ./.github/workflows/code_checker.yaml
+    with:
+      run: ${{ needs.dispatcher.outputs.runCxxAnalyzers == 'YES' }}
