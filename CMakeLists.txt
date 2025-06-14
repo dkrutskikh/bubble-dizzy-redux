@@ -8,8 +8,6 @@ set(CMAKE_RELWITHDEBINFO_POSTFIX "rd")
 
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo" CACHE STRING "" FORCE)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
 ################################################
 #            User-provided options             #
 ################################################
@@ -31,7 +29,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Enable C 17
 set(CMAKE_C_STANDARD 17)
 
-include(ConfigureEngine)
+add_subdirectory(src/engine)
 
 add_executable(bubble-dizzy hello.cpp)
 
