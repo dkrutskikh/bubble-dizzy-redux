@@ -3,15 +3,15 @@ cmake_minimum_required(VERSION 3.31.6 FATAL_ERROR)
 if(NOT DEFINED TARGET_PLATFORM)
   if(CMAKE_SYSTEM_NAME MATCHES Windows)
 
-    set(AVAILABLE_PLATFORMS "Windows Desktop" FORCE)
+    set(AVAILABLE_PLATFORMS "Windows Desktop")
 
   elseif(UNIX AND NOT APPLE)
 
-    set(AVAILABLE_PLATFORMS "Linux Desktop" FORCE)
+    set(AVAILABLE_PLATFORMS "Linux Desktop")
 
   elseif(APPLE)
 
-    set(AVAILABLE_PLATFORMS "macOS Desktop" FORCE)
+    set(AVAILABLE_PLATFORMS "macOS Desktop")
 
   endif()
 
