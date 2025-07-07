@@ -4,6 +4,9 @@
     "cSpell.words": [
         "devkit",
         "devkitarm",
+        "MSVC",
+        "NDEBUG",
+        "RELWITHDEBINFO",
         "toygine",
         "Toyman",
         "yolkfolk"

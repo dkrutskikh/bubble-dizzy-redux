@@ -25,7 +25,7 @@
 
 using namespace std;
 
-int main()
+int __cdecl main()
 {
     vector<string> msg{
         "Hello", "C++", "World", "from", "VS Code", "and the C++ extension!",
