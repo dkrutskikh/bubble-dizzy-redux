@@ -1,71 +1,19 @@
 if(TARGET_PLATFORM STREQUAL "Windows Desktop")
 
   if(MSVC)
-      message(STATUS "Compiler: MSVC, version: " ${MSVC_VERSION})
+    message(STATUS "Compiler: MSVC, version: " ${MSVC_VERSION})
 
-#####################
-
-      # Link incrementally
-      add_link_options(
-        "$<$<CONFIG:DEBUG>:/INCREMENTAL>"
-        "$<$<CONFIG:RELWITHDEBINFO>:/INCREMENTAL:NO>"
-        "$<$<CONFIG:RELEASE>:/INCREMENTAL:NO>"
-      )
-
-      # Link-time code generation
-      add_link_options(
-        "$<$<CONFIG:RELWITHDEBINFO>:/LTCG:STATUS>"
-        "$<$<CONFIG:RELEASE>:/LTCG:STATUS>"
-      )
-
-      # Treat linker warnings as errors
-      add_link_options(/WX)
-
-      # Create side-by-side assembly manifest
-      add_link_options(/MANIFEST)
-
-      # Manifest lookup
-      add_link_options(/ALLOWISOLATION)
-
-      # Embeds UAC information in manifest
-      add_link_options(/MANIFESTUAC:"/level='asInvoker' /uiAccess='false'")
-
-      # Generate debug info
-      add_link_options(
-        "$<$<CONFIG:DEBUG>:/DEBUG:FULL>"
-        "$<$<CONFIG:RELWITHDEBINFO>:/DEBUG:FULL>"
-        "$<$<CONFIG:RELEASE>:/DEBUG:NONE>"
-      )
-
-      # Add DebuggableAttribute
-      add_link_options(
-        "$<$<CONFIG:DEBUG>:/ASSEMBLYDEBUG>"
-        "$<$<CONFIG:RELWITHDEBINFO>:/ASSEMBLYDEBUG:DISABLE>"
-        "$<$<CONFIG:RELEASE>:/ASSEMBLYDEBUG:DISABLE>"
-      )
-
-      # Handle Large Addresses
-      add_link_options(/LARGEADDRESSAWARE)
-
-      # Link-time code generation
-      add_link_options(
-        "$<$<CONFIG:DEBUG>:/LTCG:OFF>"
-        "$<$<CONFIG:RELWITHDEBINFO>:/LTCG>"
-        "$<$<CONFIG:RELEASE>:/LTCG>"
-      )
-
-      # Disable Safe Exception Handlers
-      add_link_options(/SAFESEH:NO)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:Debug>")
 
     # Minimum CPU Architecture select based on https://store.steampowered.com/hwsurvey/
 
-    set(CMAKE_C_FLAGS   "/std:c17 /nologo /Wall /WX /DWIN32 /D_WINDOWS /DUNICODE /D_UNICODE /EHsc /Zc:wchar_t /Zc:forScope /Zc:inline /Zc:rvalueCast /GR- /permissive")
-    set(CMAKE_CXX_FLAGS "         /nologo /Wall /WX /DWIN32 /D_WINDOWS /DUNICODE /D_UNICODE /EHsc /Zc:wchar_t /Zc:forScope /Zc:inline /Zc:rvalueCast /GR- /permissive")
+    set(CMAKE_C_FLAGS   "/std:c17 /nologo /Wall /WX /wd4710 /wd4711 /DWIN32 /D_WINDOWS /DUNICODE /D_UNICODE /EHsc /Zc:wchar_t /Zc:forScope /Zc:inline /Zc:rvalueCast /GR- /permissive")
+    set(CMAKE_CXX_FLAGS "         /nologo /Wall /WX /wd4710 /wd4711 /DWIN32 /D_WINDOWS /DUNICODE /D_UNICODE /EHsc /Zc:wchar_t /Zc:forScope /Zc:inline /Zc:rvalueCast /GR- /permissive")
 
     if(CMAKE_SIZEOF_VOID_P MATCHES "8")
 
-      set(CMAKE_C_FLAGS_DEBUG            "/ZI /diagnostics:caret   /sdl                     /fsanitize=fuzzer /Od /Ob0 /Oi-     /Oy-         /D_DEBUG /GF- /RTCc /D_ALLOW_RTCc_IN_STL /RTCsu /MTd /GS  /guard:cf- /Gy  /Qpar- /arch:SSE2 /fp:strict  /fp:except  /hotpatch /Gd")
-      set(CMAKE_CXX_FLAGS_DEBUG          "/ZI /diagnostics:caret   /sdl                     /fsanitize=fuzzer /Od /Ob0 /Oi-     /Oy-         /D_DEBUG /GF- /RTCc /D_ALLOW_RTCc_IN_STL /RTCsu /MTd /GS  /guard:cf- /Gy  /Qpar- /arch:SSE2 /fp:strict  /fp:except  /hotpatch /Gd")
+      set(CMAKE_C_FLAGS_DEBUG            "/ZI /diagnostics:caret   /sdl                     /fsanitize=fuzzer /Od /Ob0 /Oi-     /Oy-         /D_DEBUG /GF- /RTCc /D_ALLOW_RTCc_IN_STL /RTCsu /MTd /GS  /guard:cf- /Gy  /Qpar- /arch:SSE2 /fp:strict  /fp:except            /Gr")
+      set(CMAKE_CXX_FLAGS_DEBUG          "/ZI /diagnostics:caret   /sdl                     /fsanitize=fuzzer /Od /Ob0 /Oi-     /Oy-         /D_DEBUG /GF- /RTCc /D_ALLOW_RTCc_IN_STL /RTCsu /MTd /GS  /guard:cf- /Gy  /Qpar- /arch:SSE2 /fp:strict  /fp:except            /Gd")
 
       set(CMAKE_C_FLAGS_RELWITHDEBINFO   "/Zi /diagnostics:column  /sdl  /fsanitize=address /fsanitize=fuzzer /Ox /Ob3 /Oi  /Ot /Oy- /GT /GL /D_DEBUG /GF                                    /MTd /GS  /guard:cf  /Gy- /Qpar- /arch:SSE2 /fp:precise /fp:except            /Gr")
       set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/Zi /diagnostics:column  /sdl  /fsanitize=address /fsanitize=fuzzer /Ox /Ob3 /Oi  /Ot /Oy- /GT /GL /D_DEBUG /GF                                    /MTd /GS  /guard:cf  /Gy- /Qpar- /arch:SSE2 /fp:precise /fp:except            /Gr")
@@ -86,16 +34,16 @@ if(TARGET_PLATFORM STREQUAL "Windows Desktop")
 
     endif()
 
-    set(CMAKE_STATIC_LINKER_FLAGS_DEBUG "")
-    set(CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO "/LTCG")
-    set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "/LTCG")
+    set(CMAKE_STATIC_LINKER_FLAGS "/WX                                                                                 /LARGEADDRESSAWARE /SAFESEH:NO")
+    set(CMAKE_EXE_LINKER_FLAGS    "/WX /MANIFEST /MANIFESTUAC:\"/level='asInvoker' /uiAccess='false'\" /ALLOWISOLATION /LARGEADDRESSAWARE /SAFESEH:NO")
 
-    set(CMAKE_EXE_LINKER_FLAGS_DEBUG          "/DEBUG /INCREMENTAL          /SAFESEH:NO")
-    set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "/DEBUG /INCREMENTAL:NO /LTCG /SAFESEH:NO")
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASE        "       /INCREMENTAL:NO /LTCG /SAFESEH:NO")
+    set(CMAKE_STATIC_LINKER_FLAGS_DEBUG           "/INCREMENTAL    /LTCG:OFF    /DEBUG:FULL /ASSEMBLYDEBUG")
+    set(CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO  "/INCREMENTAL:NO /LTCG        /DEBUG:FULL /ASSEMBLYDEBUG")
+    set(CMAKE_STATIC_LINKER_FLAGS_RELEASE         "/INCREMENTAL:NO /LTCG        /DEBUG:NONE /ASSEMBLYDEBUG:DISABLE")
 
-    set(STATIC_LIBRARY_FLAGS_RELWITHDEBINFO "/LTCG")
-    set(STATIC_LIBRARY_FLAGS_RELEASE "/LTCG")
+    set(CMAKE_EXE_LINKER_FLAGS_DEBUG              "/INCREMENTAL:NO /LTCG:OFF    /DEBUG:FULL /ASSEMBLYDEBUG")
+    set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO     "/INCREMENTAL:NO /LTCG        /DEBUG:FULL /ASSEMBLYDEBUG")
+    set(CMAKE_EXE_LINKER_FLAGS_RELEASE            "/INCREMENTAL:NO /LTCG        /DEBUG:NONE /ASSEMBLYDEBUG:DISABLE")
   endif(MSVC)
 
 elseif(TARGET_PLATFORM STREQUAL "Linux Desktop")
@@ -120,15 +68,14 @@ message("CMAKE_CXX_FLAGS_DEBUG=${CMAKE_CXX_FLAGS_DEBUG}")
 message("CMAKE_CXX_FLAGS_RELWITHDEBINFO=${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
 message("CMAKE_CXX_FLAGS_RELEASE=${CMAKE_CXX_FLAGS_RELEASE}")
 
-message("STATIC_LIBRARY_FLAGS=${STATIC_LIBRARY_FLAGS}")
-message("STATIC_LIBRARY_FLAGS_DEBUG=${STATIC_LIBRARY_FLAGS_DEBUG}")
-message("STATIC_LIBRARY_FLAGS_RELWITHDEBINFO=${STATIC_LIBRARY_FLAGS_RELWITHDEBINFO}")
-message("STATIC_LIBRARY_FLAGS_RELEASE=${STATIC_LIBRARY_FLAGS_RELEASE}")
+message("CMAKE_STATIC_LINKER_FLAGS=${CMAKE_STATIC_LINKER_FLAGS}")
+message("CMAKE_STATIC_LINKER_FLAGS_DEBUG=${CMAKE_STATIC_LINKER_FLAGS_DEBUG}")
+message("CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO=${CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO}")
+message("CMAKE_STATIC_LINKER_FLAGS_RELEASE=${CMAKE_STATIC_LINKER_FLAGS_RELEASE}")
 
-message("CMAKE_CXX_LINKER_PREFERENCE=${CMAKE_CXX_LINKER_PREFERENCE}")
-message("CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES=${CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES}")
-message("CMAKE_CXX_LINK_EXECUTABLE=${CMAKE_CXX_LINK_EXECUTABLE}")
+message("CMAKE_EXE_LINKER_FLAGS=${CMAKE_EXE_LINKER_FLAGS}")
+message("CMAKE_EXE_LINKER_FLAGS_DEBUG=${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
+message("CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO=${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO}")
+message("CMAKE_EXE_LINKER_FLAGS_RELEASE=${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 
-message("LIBRARY_OUTPUT_DIRECTORY=${LIBRARY_OUTPUT_DIRECTORY}")
 message("PREPROCESSOR_DEFINITIONS=${PREPROCESSOR_DEFINITIONS}")
-message("CMAKE_LIBRARY_OUTPUT_DIRECTORY=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
