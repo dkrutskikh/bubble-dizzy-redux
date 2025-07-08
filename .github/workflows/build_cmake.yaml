@@ -13,6 +13,12 @@ jobs:
         - name: macOS
           os: macos-latest
           cmake_preset: macos-xcode
+        - name: Windows x64
+          os: windows-latest
+          cmake_preset: windows-msvc-release
+        - name: Windows x86
+          os: windows-latest
+          cmake_preset: windows-msvc-release-x86
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -22,6 +28,41 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Build Number
+      run: |
+        TMP_JOBID="$GITHUB_RUN_ID"
+        TMP_BRANCH=$(basename ${GITHUB_REF#refs/heads/})
+        TMP_PRID="$PULL_REQUEST"
+        TMP_COMMIT=$(git rev-parse --short "$GITHUB_SHA")
+
+        PACKAGE_FILE_NAME="${TMP_JOBID}-dizzy"
+        PACKAGE_NAME_SUFFIX=""
+        PACKAGE_GOLDMAIN="OFF"
+        if [ -z "$TMP_PRID" ] || [ "$TMP_PRID" == "false" ];
+        then
+        	branch_name=$(echo "$TMP_BRANCH" | sed 's/[^[:alnum:]]\+/_/g')
+        	PACKAGE_FILE_NAME="${PACKAGE_FILE_NAME}-branch-${branch_name}-${TMP_COMMIT}"
+        	if [ "${branch_name}" != "main" ];
+        	then
+        		PACKAGE_NAME_SUFFIX="branch ${branch_name}"
+        	else
+            PACKAGE_GOLDMAIN="ON"
+        	fi
+        else
+          PACKAGE_FILE_NAME="${PACKAGE_FILE_NAME}-PR-${TMP_PRID}-${TMP_COMMIT}"
+          PACKAGE_NAME_SUFFIX="PR ${TMP_PRID}"
+        fi
+
+        if [ "${PACKAGE_NAME_SUFFIX}" != "" ];
+        then
+          PACKAGE_NAME_SUFFIX="(${PACKAGE_NAME_SUFFIX})"
+        fi
+
+        echo PACKAGE_FILE_NAME="$PACKAGE_FILE_NAME" >> $GITHUB_ENV
+        echo PACKAGE_NAME_SUFFIX="$PACKAGE_NAME_SUFFIX" >> $GITHUB_ENV
+        echo PACKAGE_GOLDMASTER="$PACKAGE_GOLDMASTER" >> $GITHUB_ENV
+      env:
+        PULL_REQUEST: ${{ github.event.pull_request.number }}
     - name: Configure
       run: |
         cmake --preset ${{ matrix.cmake_preset }}
