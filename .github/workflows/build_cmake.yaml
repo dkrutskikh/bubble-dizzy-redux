@@ -11,7 +11,7 @@ jobs:
       matrix:
         include:
         - name: macOS
-          os: macos-latest
+          os: macos-15
           cmake_preset: macos-xcode
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
@@ -22,6 +22,35 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Build Number
+      run: |
+        BUILD_FILE_NAME="${GITHUB_RUN_ID}-Bubble-Dizzy"
+        BUILD_NAME_SUFFIX=""
+        BUILD_MAIN="OFF"
+
+        if [ "${{ github.event_name }}" == "pull_request" ];
+        then
+          BUILD_FILE_NAME="${BUILD_FILE_NAME}-PR-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}"
+          BUILD_NAME_SUFFIX="PR ${{ github.event.pull_request.number }}"
+        else
+        	BUILD_FILE_NAME="${BUILD_FILE_NAME}-Branch-${{ github.head_ref }}-${{ github.sha }}"
+        	if [ "${{ github.head_ref }}" != "main" ];
+        	then
+        		BUILD_NAME_SUFFIX="BRANCH ${{ github.head_ref }}"
+        	else
+            BUILD_MAIN="ON"
+        	fi
+        fi
+
+        if [ "${BUILD_NAME_SUFFIX}" != "" ];
+        then
+          BUILD_NAME_SUFFIX="(${BUILD_NAME_SUFFIX})"
+        fi
+
+        echo BUILD_FILE_NAME="$BUILD_FILE_NAME" >> $GITHUB_ENV
+        echo BUILD_NAME_SUFFIX="$BUILD_NAME_SUFFIX" >> $GITHUB_ENV
+        echo BUILD_MAIN="$BUILD_MAIN" >> $GITHUB_ENV
+
     - name: Configure
       run: |
         cmake --preset ${{ matrix.cmake_preset }}
