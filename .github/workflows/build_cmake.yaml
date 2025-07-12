@@ -33,7 +33,9 @@ jobs:
           BUILD_FILE_NAME="${BUILD_FILE_NAME}-PR-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}"
           BUILD_NAME_SUFFIX="PR ${{ github.event.pull_request.number }}"
         else
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          RAW_BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          # Replace anything that is not alphanumeric (either alphabets or numbers), `-` or `_` with `_`
+          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | tr -c '[:alnum:]_- ' '_' | tr -s '_')"
         	BUILD_FILE_NAME="${BUILD_FILE_NAME}-BRANCH-${BRANCH_NAME}-${{ github.sha }}"
         	if [ "${BRANCH_NAME}" != "main" ];
         	then
