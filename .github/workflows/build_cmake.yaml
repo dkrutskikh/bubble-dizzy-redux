@@ -13,12 +13,6 @@ jobs:
         - name: macOS
           os: macos-15
           cmake_preset: macos-xcode-release
-        - name: win32
-          os: windows-2025
-          cmake_preset: macos-xcode-release
-        - name: win64
-          os: windows-2025
-          cmake_preset: macos-xcode-release
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
