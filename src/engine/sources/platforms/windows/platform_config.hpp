@@ -23,7 +23,11 @@
   \brief  additional windows platform header
 */
 
-#ifndef TOYGINE_MACOS_PLATFORM_CONFIG_HPP_
-#define TOYGINE_MACOS_PLATFORM_CONFIG_HPP_
+#ifndef TOYGINE_WINDOWS_PLATFORM_CONFIG_HPP_
+#define TOYGINE_WINDOWS_PLATFORM_CONFIG_HPP_
+
+// … rest of file unchanged …
+
+#endif // TOYGINE_WINDOWS_PLATFORM_CONFIG_HPP_
 
 #endif // TOYGINE_MACOS_PLATFORM_CONFIG_HPP_
