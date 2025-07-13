@@ -9,3 +9,5 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 include(ConfigureEngine)
 include(ConfigureCompiler)
+
+add_subdirectory(sources)
