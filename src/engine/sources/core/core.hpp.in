@@ -19,12 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 /*
-  \file   core.h
+  \file   core.hpp
   \brief  toygine core part united header
 */
 
-#ifndef INCLUDE_CORE_H_
-#define INCLUDE_CORE_H_
+#ifndef INCLUDE_CORE_HPP_
+#define INCLUDE_CORE_HPP_
 
 //------------------------------------------------------------------------------
 
@@ -73,4 +73,4 @@
 
 #include "@TARGET_PLATFORM_CONFIG_HEADER@"
 
-#endif // INCLUDE_CORE_H_
+#endif // INCLUDE_CORE_HPP_

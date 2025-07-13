@@ -47,6 +47,7 @@ include(ConfigureCompiler)
 add_subdirectory(src/engine)
 
 add_executable(bubble-dizzy hello.cpp)
+target_link_libraries(bubble-dizzy toygine)
 
 include(CTest)
 enable_testing()
