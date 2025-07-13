@@ -23,7 +23,7 @@
   \brief  additional macOS platform header
 */
 
-#ifndef PLATFORM_CONFIG_H
-#define PLATFORM_CONFIG_H
+#ifndef TOYGINE_MACOS_PLATFORM_CONFIG_H_
+#define TOYGINE_MACOS_PLATFORM_CONFIG_H_
 
-#endif // PLATFORM_CONFIG_H
+#endif // TOYGINE_MACOS_PLATFORM_CONFIG_H_
