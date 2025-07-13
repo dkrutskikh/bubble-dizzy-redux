@@ -11,7 +11,7 @@ jobs:
       matrix:
         include:
         - name: macOS
-          os: macos-latest
+          os: macos-15
           cmake_preset: macos-xcode
         - name: win32
           os: windows-2025
@@ -27,47 +27,40 @@ jobs:
       uses: actions/checkout@v4
     - name: Build Number
       run: |
-        TMP_JOB_ID="$GITHUB_RUN_ID"
-        TMP_BRANCH=$(basename ${GITHUB_REF#refs/heads/})
-        TMP_PR_ID="$PULL_REQUEST"
-        TMP_COMMIT=$(git rev-parse --short "$GITHUB_SHA")
+        BUILD_FILE_NAME="${GITHUB_RUN_ID}-BUBBLE-DIZZY"
+        BUILD_NAME_SUFFIX=""
+        BUILD_MAIN="OFF"
 
-        echo "TMP_JOB_ID=${TMP_JOB_ID}"
-        echo "TMP_BRANCH=${TMP_BRANCH}"
-        echo "TMP_PR_ID=${TMP_PR_ID}"
-        echo "TMP_COMMIT=${TMP_COMMIT}"
-
-        PACKAGE_FILE_NAME="${TMP_JOB_ID}-bubble-dizzy"
-        PACKAGE_NAME_SUFFIX=""
-        PACKAGE_GOLDMAIN="OFF"
-        if [ -z "$TMP_PR_ID" ] || [ "$TMP_PR_ID" == "false" ];
+        if [ "${{ github.event_name }}" == "pull_request" ];
         then
-        	branch_name=$(echo "$TMP_BRANCH" | sed 's/[^[:alnum:]]\+/_/g')
-        	PACKAGE_FILE_NAME="${PACKAGE_FILE_NAME}-branch-${branch_name}-${TMP_COMMIT}"
-        	if [ "${branch_name}" != "main" ];
-        	then
-        		PACKAGE_NAME_SUFFIX="branch ${branch_name}"
-        	else
-            PACKAGE_GOLDMAIN="ON"
-        	fi
+          BUILD_FILE_NAME="${BUILD_FILE_NAME}-PR-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}"
+          BUILD_NAME_SUFFIX="PR ${{ github.event.pull_request.number }}"
         else
-          PACKAGE_FILE_NAME="${PACKAGE_FILE_NAME}-PR-${TMP_PRID}-${TMP_COMMIT}"
-          PACKAGE_NAME_SUFFIX="PR ${TMP_PRID}"
+          RAW_BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+          # Replace anything that is not alphanumeric (either alphabets or numbers), `-` or `_` with `_`
+          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | tr -c '[:alnum:]_- ' '_' | tr -s '_')"
+        	BUILD_FILE_NAME="${BUILD_FILE_NAME}-BRANCH-${BRANCH_NAME}-${{ github.sha }}"
+        	if [ "${BRANCH_NAME}" != "main" ];
+        	then
+        		BUILD_NAME_SUFFIX="BRANCH ${BRANCH_NAME}"
+        	else
+            BUILD_MAIN="ON"
+        	fi
         fi
-        if [ "${PACKAGE_NAME_SUFFIX}" != "" ];
+
+        if [ "${BUILD_NAME_SUFFIX}" != "" ];
         then
-          PACKAGE_NAME_SUFFIX="(${PACKAGE_NAME_SUFFIX})"
+          BUILD_NAME_SUFFIX="(${BUILD_NAME_SUFFIX})"
         fi
 
-        echo PACKAGE_FILE_NAME="$PACKAGE_FILE_NAME" >> $GITHUB_ENV
-        echo PACKAGE_NAME_SUFFIX="$PACKAGE_NAME_SUFFIX" >> $GITHUB_ENV
-        echo PACKAGE_GOLDMASTER="$PACKAGE_GOLDMASTER" >> $GITHUB_ENV
+        echo BUILD_FILE_NAME="$BUILD_FILE_NAME" >> $GITHUB_ENV
+        echo BUILD_NAME_SUFFIX="$BUILD_NAME_SUFFIX" >> $GITHUB_ENV
+        echo BUILD_MAIN="$BUILD_MAIN" >> $GITHUB_ENV
 
-        echo "BUILD_NUMBER=${TMP_JOB_ID}-${TMP_BRANCH}-${TMP_PR_ID}-${TMP_COMMIT}"
-        echo "BUILD_NUMBER=${TMP_JOB_ID}-${TMP_BRANCH}-${TMP_PR_ID}-${TMP_COMMIT}" >> $GITHUB_ENV
     - name: Configure
       run: |
         cmake --preset ${{ matrix.cmake_preset }}
+
     - name: Build
       run: |
         cmake --build --preset ${{ matrix.cmake_preset }}
