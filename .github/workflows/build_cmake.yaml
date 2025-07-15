@@ -10,18 +10,22 @@ jobs:
     strategy:
       matrix:
         include:
-        - name: macOS
+        - platform: macOS
           os: macos-15
+          pack: yes
           cmake_preset: macos-xcode
-    name: CMake (${{ matrix.name }})
+          pack_type: Release
+    name: CMake (${{ matrix.platform }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     defaults:
       run:
         shell: bash
+
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
     - name: Build Number
       run: |
         BUILD_FILE_NAME="${GITHUB_RUN_ID}-BUBBLE-DIZZY"
@@ -57,6 +61,29 @@ jobs:
     - name: Configure
       run: |
         cmake --preset ${{ matrix.cmake_preset }}
+
     - name: Build
       run: |
         cmake --build --preset ${{ matrix.cmake_preset }}
+
+    - name: Kill XProtect to work around CPack issue on macOS
+      if: ${{ startsWith(matrix.platform, 'macOS') }}
+      run: |
+        # Cf. https://github.com/actions/runner-images/issues/7522#issuecomment-1556766641
+        echo Killing...; sudo pkill -9 XProtect >/dev/null || true;
+        echo "Waiting..."; counter=0; while pgrep XProtect && ((counter < 20)); do sleep 3; ((counter++)); done
+        pgrep XProtect || true
+
+    - name: Pack
+      id: cpack
+      if: ${{ matrix.pack == 'yes' }}
+      run: |
+        cd '${{github.workspace}}/out/build/${{ matrix.cmake_preset }}'
+
+        # Workaround for CPack bug on macOS 13
+        counter=0
+        until cpack -C ${{matrix.pack_type}} || ((counter > 20)); do
+            sleep 3
+            ((counter++))
+        done
+        rm -rf _CPack_Packages
