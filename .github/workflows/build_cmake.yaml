@@ -12,7 +12,7 @@ jobs:
         include:
         - name: macOS
           os: macos-15
-          cmake_preset: macos-xcode
+          cmake_preset: macos-xcode-release
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -57,6 +57,7 @@ jobs:
     - name: Configure
       run: |
         cmake --preset ${{ matrix.cmake_preset }}
+
     - name: Build
       run: |
         cmake --build --preset ${{ matrix.cmake_preset }}
