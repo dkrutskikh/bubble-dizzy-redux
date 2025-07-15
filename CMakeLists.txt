@@ -43,11 +43,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/cmake")
 include(ConfigureEngine)
 include(ConfigureCompiler)
+include(ConsoleApplication)
 
 add_subdirectory(src/engine)
-
-add_executable(bubble-dizzy hello.cpp)
-target_link_libraries(bubble-dizzy toygine)
-
-include(CTest)
-enable_testing()
+add_subdirectory(src/game)
