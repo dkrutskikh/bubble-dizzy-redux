@@ -10,9 +10,12 @@ jobs:
     strategy:
       matrix:
         include:
-        - name: macOS
+        - name: macOS XCode
           os: macos-15
           cmake_preset: macos-xcode-release
+        - name: macOS Ninja
+          os: macos-15
+          cmake_preset: macos-ninja-release
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -25,7 +28,9 @@ jobs:
 
     - name: Prepare CI
       run: |
-        echo "matrix.os=${{ matrix.os }}"
+        if [[ "${{ matrix.os }}" =~ "macos" ]]; then
+          brew install ninja
+        fi
 
       env:
         VCMI_BUILD_PLATFORM: x64

@@ -27,6 +27,12 @@
             }
         },
         {
+            "name": "macos-ninja-release",
+            "displayName": "Ninja release",
+            "description": "MacOS Ninja",
+            "inherits": "base-release"
+        },
+        {
             "name": "macos-xcode-release",
             "displayName": "XCode release",
             "description": "MacOS Xcode",
@@ -39,6 +45,11 @@
             "name": "default-release",
             "hidden": true,
             "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "macos-ninja-release",
+            "configurePreset": "macos-ninja-release",
+            "inherits": "default-release"
         },
         {
             "name": "macos-xcode-release",
