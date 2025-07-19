@@ -10,9 +10,12 @@ jobs:
     strategy:
       matrix:
         include:
-        - name: macOS
+        - name: macOS XCode
           os: macos-15
-          cmake_preset: macos-xcode
+          cmake_preset: macos-xcode-release
+        - name: macOS Ninja
+          os: macos-15
+          cmake_preset: macos-ninja-release
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -22,11 +25,21 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+
+    - name: Prepare CI
+      run: |
+        if [[ "${{ matrix.os }}" =~ "macos" ]]; then
+          brew install ninja
+        fi
+
+      env:
+        VCMI_BUILD_PLATFORM: x64
+
     - name: Build Number
       run: |
         BUILD_FILE_NAME="${GITHUB_RUN_ID}-BUBBLE-DIZZY"
         BUILD_NAME_SUFFIX=""
-        BUILD_MAIN="OFF"
+        ENABLE_PUBLIC_RELEASE="OFF"
 
         if [ "${{ github.event_name }}" == "pull_request" ];
         then
@@ -41,7 +54,7 @@ jobs:
         	then
         		BUILD_NAME_SUFFIX="BRANCH ${BRANCH_NAME}"
         	else
-            BUILD_MAIN="ON"
+            ENABLE_PUBLIC_RELEASE="ON"
         	fi
         fi
 
@@ -52,7 +65,7 @@ jobs:
 
         echo BUILD_FILE_NAME="$BUILD_FILE_NAME" >> $GITHUB_ENV
         echo BUILD_NAME_SUFFIX="$BUILD_NAME_SUFFIX" >> $GITHUB_ENV
-        echo BUILD_MAIN="$BUILD_MAIN" >> $GITHUB_ENV
+        echo ENABLE_PUBLIC_RELEASE="$ENABLE_PUBLIC_RELEASE" >> $GITHUB_ENV
 
     - name: Configure
       run: |
