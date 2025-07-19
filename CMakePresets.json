@@ -28,13 +28,13 @@
         },
         {
             "name": "macos-ninja-release",
-            "displayName": "Ninja release",
+            "displayName": "macOS Ninja release",
             "description": "MacOS Ninja",
             "inherits": "base-release"
         },
         {
             "name": "macos-xcode-release",
-            "displayName": "XCode release",
+            "displayName": "macOS XCode release",
             "description": "MacOS Xcode",
             "inherits": "base-release",
             "generator": "Xcode"
