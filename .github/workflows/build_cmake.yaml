@@ -26,7 +26,7 @@ jobs:
       run: |
         BUILD_FILE_NAME="${GITHUB_RUN_ID}-BUBBLE-DIZZY"
         BUILD_NAME_SUFFIX=""
-        BUILD_PRODUCTION_RELEASE="OFF"
+        ENABLE_PUBLIC_RELEASE="OFF"
 
         if [ "${{ github.event_name }}" == "pull_request" ];
         then
@@ -41,7 +41,7 @@ jobs:
         	then
         		BUILD_NAME_SUFFIX="BRANCH ${BRANCH_NAME}"
         	else
-            BUILD_PRODUCTION_RELEASE="ON"
+            ENABLE_PUBLIC_RELEASE="ON"
         	fi
         fi
 
