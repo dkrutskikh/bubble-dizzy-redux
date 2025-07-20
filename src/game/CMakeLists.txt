@@ -17,6 +17,14 @@ set(LIB_LIST toygine)
 console_application(${BINARY_NAME} ${SRC_LIST} ${HDR_LIST} ${INL_LIST} ${LIB_LIST})
 
 #------------------------------------------------------------------------------------------------------------
+# Installation section
+#------------------------------------------------------------------------------------------------------------
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${BINARY_NAME} DESTINATION .)
+
+#------------------------------------------------------------------------------------------------------------
+# Packaging section
+#------------------------------------------------------------------------------------------------------------
 
 set(PACKAGE_NAME_SUFFIX "" CACHE STRING "Suffix for CPack package name")
 set(PACKAGE_FILE_NAME "" CACHE STRING "Override for CPack package filename")
