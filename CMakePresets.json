@@ -12,16 +12,32 @@
             "binaryDir": "${sourceDir}/out/build/${presetName}"
         },
         {
-            "name": "macos-xcode",
-            "displayName": "XCode",
+            "name": "base-release",
             "inherits": "release-binary-dir",
-            "description": "Using compilers: C = /usr/bin/clang, CXX = /usr/bin/clang++",
+            "hidden": true,
+            "generator": "Ninja",
             "cacheVariables": {
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CMAKE_C_COMPILER": "/usr/bin/clang",
-                "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
-                "CMAKE_BUILD_TYPE": "Debug"
+                "PACKAGE_FILE_NAME": "$env{BUILD_FILE_NAME}",
+                "PACKAGE_NAME_SUFFIX": "$env{BUILD_NAME_SUFFIX}",
+                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+                "ENABLE_TEST": "OFF",
+                "ENABLE_PUBLIC_RELEASE": "$env{ENABLE_PUBLIC_RELEASE}",
+                "ENABLE_PCH": "OFF"
             }
+        },
+        {
+            "name": "macos-ninja-release",
+            "displayName": "macOS Ninja release",
+            "description": "MacOS Ninja",
+            "inherits": "base-release"
+        },
+        {
+            "name": "macos-xcode-release",
+            "displayName": "macOS XCode release",
+            "description": "MacOS Xcode",
+            "inherits": "base-release",
+            "generator": "Xcode"
         }
     ],
     "buildPresets": [
@@ -31,8 +47,13 @@
             "configuration": "RelWithDebInfo"
         },
         {
-            "name": "macos-xcode",
-            "configurePreset": "macos-xcode",
+            "name": "macos-ninja-release",
+            "configurePreset": "macos-ninja-release",
+            "inherits": "default-release"
+        },
+        {
+            "name": "macos-xcode-release",
+            "configurePreset": "macos-xcode-release",
             "inherits": "default-release"
         }
     ]

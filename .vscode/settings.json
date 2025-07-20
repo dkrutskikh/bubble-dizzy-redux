@@ -2,6 +2,7 @@
     "clang-format.fallbackStyle": "Google",
     "cSpell.language": "en,ru",
     "cSpell.words": [
+        "CPACK",
         "devkit",
         "devkitarm",
         "MSVC",
