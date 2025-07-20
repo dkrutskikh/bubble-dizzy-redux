@@ -24,13 +24,13 @@ jobs:
           cpack_extension: tar.gz
 
         - name: Windows MSVC
-          platform: macos-xcode-arm
-          os: macos-15
+          platform: windows-msvc-x64
+          os: windows-2025
           cmake_preset: macos-xcode-release
 
         - name: Windows MSVC x86
-          platform: macos-xcode-arm
-          os: macos-15
+          platform: windows-msvc-x86
+          os: windows-2025
           cmake_preset: macos-xcode-release
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
