@@ -47,6 +47,17 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
+        },
+        {
+            "name": "windows-msvc-release",
+            "displayName": "Windows x64 RelWithDebInfo",
+            "description": "Bubble Dizzy Redux Windows MSVC",
+            "inherits": "base-release",
+            "generator": "Visual Studio 17 2022",
+            "architecture": {
+                "value": "x64",
+                "strategy": "set"
+            }
         }
     ],
     "buildPresets": [
@@ -68,6 +79,11 @@
         {
             "name": "macos-xcode-release",
             "configurePreset": "macos-xcode-release",
+            "inherits": "default-release"
+        },
+        {
+            "name": "windows-msvc-release",
+            "configurePreset": "windows-msvc-release",
             "inherits": "default-release"
         },
         {
