@@ -22,6 +22,17 @@ jobs:
           cmake_preset: macos-ninja-release
           cpack_type: RelWithDebInfo
           cpack_extension: tar.gz
+
+        - name: Windows MSVC
+          platform: windows-msvc-x64
+          os: windows-2025
+          cmake_preset: windows-msvc-release
+
+        - name: Windows MSVC x86
+          platform: windows-msvc-x86
+          os: windows-2025
+          cmake_preset: windows-msvc-release-x86
+
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -36,6 +47,18 @@ jobs:
       run: |
         if [[ "${{ matrix.os }}" =~ "macos" ]]; then
           brew install ninja
+        elif [[ "${{ matrix.os }}" =~ "windows" ]]; then
+          MSVC_INSTALL_PATH=$(vswhere -latest -property installationPath)
+          echo "MSVC_INSTALL_PATH = $MSVC_INSTALL_PATH"
+
+          echo "Installed toolset versions:"
+          ls -vr "$MSVC_INSTALL_PATH/VC/Tools/MSVC"
+
+          TOOLS_DIR=$(ls -vr "$MSVC_INSTALL_PATH/VC/Tools/MSVC/" | head -1)
+          echo "TOOLS_DIR = $TOOLS_DIR"
+
+          DUMPBIN_PATH="$MSVC_INSTALL_PATH/VC/Tools/MSVC/$TOOLS_DIR/bin/Hostx64/x64/dumpbin.exe"
+          echo "DUMPBIN_PATH = $DUMPBIN_PATH"
         fi
 
     - name: Build Number
