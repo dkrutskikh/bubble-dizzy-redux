@@ -24,7 +24,7 @@
 namespace toygine
 {
 
-    wchar_t * utf8toWChar( wchar_t * dest, size_t destSize, char const * src, size_t srcLen )
+    wchar_t * utf8toWChar( wchar_t * dest, std::size_t destSize, char const * src, std::size_t srcLen )
     {
         if ( dest == nullptr || destSize == 0 )
             return nullptr;
@@ -32,7 +32,7 @@ namespace toygine
         wchar_t * destPointer = dest;
         if ( srcLen > 0 && src != nullptr ) {
             wchar_t const * unicodeEndPos = dest + ( destSize - 1 );
-            size_t srcIterator = 0;
+            std::size_t srcIterator = 0;
 
             while ( srcIterator < srcLen && destPointer < unicodeEndPos ) {
                 std::uint8_t symbol = src[srcIterator++];
@@ -40,7 +40,7 @@ namespace toygine
                     *destPointer = symbol;
                 }
                 else {
-                    size_t charBytes = 0;
+                    std::size_t charBytes = 0;
                     while ( symbol & 0x80 ) {
                         ++charBytes;
                         symbol <<= 1;
@@ -59,6 +59,7 @@ namespace toygine
         }
 
         *destPointer = L'\0';
+
         return dest;
     }
 

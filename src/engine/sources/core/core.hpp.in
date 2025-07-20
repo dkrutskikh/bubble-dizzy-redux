@@ -26,6 +26,11 @@
 #ifndef INCLUDE_CORE_HPP_
 #define INCLUDE_CORE_HPP_
 
+
+#include <cstdint>
+#include <cuchar>
+
+
 //------------------------------------------------------------------------------
 
 //==============================
@@ -75,7 +80,7 @@
 
 namespace toygine
 {
-    wchar_t * utf8toWChar( wchar_t * dest, size_t destSize, char const * src, size_t srcLen );
+    wchar_t * utf8toWChar( wchar_t * dest, std::size_t destSize, char const * src, std::size_t srcLen );
 
 } // namespace toygine
 
