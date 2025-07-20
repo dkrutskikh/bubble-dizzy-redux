@@ -31,7 +31,8 @@ jobs:
         - name: Windows MSVC x86
           platform: windows-msvc-x86
           os: windows-2025
-          cmake_preset: windows-msvc-release
+          cmake_preset: windows-msvc-release-x86
+
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30

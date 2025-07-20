@@ -50,12 +50,23 @@
         },
         {
             "name": "windows-msvc-release",
-            "displayName": "Windows x64 RelWithDebInfo",
+            "displayName": "Windows x64 release",
             "description": "Bubble Dizzy Redux Windows MSVC",
             "inherits": "base-release",
             "generator": "Visual Studio 17 2022",
             "architecture": {
                 "value": "x64",
+                "strategy": "set"
+            }
+        },
+        {
+            "name": "windows-msvc-release-x86",
+            "displayName": "Windows x86 release",
+            "description": "Bubble Dizzy Redux Windows MSVC x86",
+            "inherits": "base-release",
+            "generator": "Visual Studio 17 2022",
+            "architecture": {
+                "value": "Win32",
                 "strategy": "set"
             }
         }
@@ -84,6 +95,11 @@
         {
             "name": "windows-msvc-release",
             "configurePreset": "windows-msvc-release",
+            "inherits": "default-release"
+        },
+        {
+            "name": "windows-msvc-release-x86",
+            "configurePreset": "windows-msvc-release-x86",
             "inherits": "default-release"
         },
         {
