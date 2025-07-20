@@ -16,9 +16,9 @@ set(CMAKE_SUPPRESS_REGENERATION TRUE)
 # Setup configuration types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo" CACHE STRING "" FORCE)
 
-################################################
-#            User-provided options             #
-################################################
+#------------------------------------------------------------------------------------------------------------
+# User-provided options
+#------------------------------------------------------------------------------------------------------------
 
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
@@ -27,9 +27,9 @@ if(NOT CMAKE_BUILD_TYPE)
 	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPES})
 endif()
 
-################################################
-#         Compile and linking options          #
-################################################
+#------------------------------------------------------------------------------------------------------------
+# Compile and linking options
+#------------------------------------------------------------------------------------------------------------
 
 # Enable C++20 Globally
 set(CMAKE_CXX_STANDARD 20)
@@ -45,3 +45,11 @@ include(ConfigureCompiler)
 
 add_subdirectory(src/engine)
 add_subdirectory(src/game)
+
+#------------------------------------------------------------------------------------------------------------
+# Packaging section
+#------------------------------------------------------------------------------------------------------------
+
+set(PACKAGE_NAME_SUFFIX "" CACHE STRING "Suffix for CPack package name")
+set(PACKAGE_FILE_NAME "" CACHE STRING "Override for CPack package filename")
+mark_as_advanced(PACKAGE_NAME_SUFFIX PACKAGE_FILE_NAME)
