@@ -29,18 +29,32 @@
         {
             "name": "macos-ninja-release",
             "displayName": "macOS Ninja release",
-            "description": "MacOS Ninja",
+            "description": "Bubble Dizzy Redux MacOS Ninja",
             "inherits": "base-release"
         },
         {
             "name": "macos-xcode-release",
             "displayName": "macOS XCode release",
-            "description": "MacOS Xcode",
+            "description": "Bubble Dizzy Redux MacOS XCode",
             "inherits": "base-release",
             "generator": "Xcode"
+        },
+        {
+            "name": "macos-ninja-debug",
+            "displayName": "macOS Ninja debug",
+            "description": "Bubble Dizzy Redux MacOS Ninja (Debug)",
+            "inherits": "macos-ninja-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
         }
     ],
     "buildPresets": [
+        {
+            "name": "default-debug",
+            "hidden": true,
+            "configuration": "Debug"
+        },
         {
             "name": "default-release",
             "hidden": true,
@@ -55,6 +69,11 @@
             "name": "macos-xcode-release",
             "configurePreset": "macos-xcode-release",
             "inherits": "default-release"
+        },
+        {
+            "name": "macos-ninja-debug",
+            "configurePreset": "macos-ninja-debug",
+            "inherits": "default-debug"
         }
     ]
 }

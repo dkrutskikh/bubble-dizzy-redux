@@ -34,6 +34,7 @@ endif()
 # Enable C++20 Globally
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Enable C 17 Globally
 set(CMAKE_C_STANDARD 17)
