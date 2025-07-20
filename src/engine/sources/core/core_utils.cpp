@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "../../include/core.hpp"
+#include <core.hpp>
 
 namespace toygine
 {
@@ -35,7 +35,7 @@ namespace toygine
             std::size_t srcIterator = 0;
 
             while ( srcIterator < srcLen && destPointer < unicodeEndPos ) {
-                std::uint8_t symbol = src[srcIterator++];
+                std::uint8_t symbol = static_cast<std::uint8_t>(src[srcIterator++]);
                 if ( symbol <= 0x7F ) {
                     *destPointer = symbol;
                 }
@@ -46,7 +46,7 @@ namespace toygine
                         symbol <<= 1;
                     }
 
-                    wchar_t unicodeChar = symbol >> charBytes;
+                    wchar_t unicodeChar = static_cast<wchar_t>( symbol >> charBytes );
                     while ( charBytes-- > 1 ) {
                         unicodeChar <<= 6;
                         unicodeChar |= src[srcIterator++] & 0x3F;
