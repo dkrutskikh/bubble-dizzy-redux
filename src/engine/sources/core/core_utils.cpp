@@ -35,7 +35,7 @@ namespace toygine
             std::size_t srcIterator = 0;
 
             while ( srcIterator < srcLen && destPointer < unicodeEndPos ) {
-                std::uint8_t symbol = static_cast<std::uint8_t>(src[srcIterator++]);
+                std::uint8_t symbol = static_cast<std::uint8_t>( src[srcIterator++] );
                 if ( symbol <= 0x7F ) {
                     *destPointer = symbol;
                 }
