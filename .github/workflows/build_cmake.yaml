@@ -11,15 +11,19 @@ jobs:
       matrix:
         include:
         - name: macOS XCode
+          platform: macos-xcode-arm
           os: macos-15
           run_cpack: 1
-          cpack_type: RelWithDebInfo
           cmake_preset: macos-xcode-release
+          cpack_type: RelWithDebInfo
+          cpack_extension: tar.gz
         - name: macOS Ninja
+          platform: macos-ninja-arm
           os: macos-15
           run_cpack: 1
-          cpack_type: RelWithDebInfo
           cmake_preset: macos-ninja-release
+          cpack_type: RelWithDebInfo
+          cpack_extension: tar.gz
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -35,9 +39,6 @@ jobs:
         if [[ "${{ matrix.os }}" =~ "macos" ]]; then
           brew install ninja
         fi
-
-      env:
-        VCMI_BUILD_PLATFORM: x64
 
     - name: Build Number
       run: |
@@ -83,8 +84,17 @@ jobs:
       id: cpack
       if: ${{ matrix.run_cpack == 1 }}
       run: |
-        cd '${{github.workspace}}/out/build/${{matrix.cmake_preset}}'
+        cd '${{ github.workspace }}/out/build/${{ matrix.cmake_preset }}'
 
         cpack -C ${{ matrix.cpack_type }}
 
         rm -rf _CPack_Packages
+
+    - name: Artifacts
+      if: ${{ matrix.run_cpack == 1 }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.BUILD_FILE_NAME }} - ${{ matrix.platform }}
+        compression-level: 0
+        path: |
+          ${{ github.workspace }}/out/build/${{ matrix.cmake_preset }}/${{ env.BUILD_FILE_NAME }}.${{ matrix.cpack_extension }}

@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.31.6 FATAL_ERROR)
 
-project(BubbleDizzyRedux VERSION 0.1.2 LANGUAGES C CXX)
-
 set(BINARY_NAME bubble-dizzy)
 
 include(ConsoleApplication)
