@@ -73,4 +73,10 @@
 
 #include "@TARGET_PLATFORM_CONFIG_HEADER@"
 
+namespace toygine
+{
+    wchar_t * utf8toWChar( wchar_t * dest, size_t destSize, char const * src, size_t srcLen );
+
+} // namespace toygine
+
 #endif // INCLUDE_CORE_HPP_

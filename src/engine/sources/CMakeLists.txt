@@ -10,7 +10,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/core/core.hpp.in ${CMAKE_CURRENT_SOUR
 
 #------------------------------------------------------------------------------------------------------------
 
-set(SRC_CORE_LIST core/stub.cpp)
+set(SRC_CORE_LIST core/core_utils.cpp)
 set(HDR_CORE_LIST ../include/core.hpp)
 set(INL_CORE_LIST ../include/core_inline.hpp)
 
