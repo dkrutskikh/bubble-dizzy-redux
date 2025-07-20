@@ -52,8 +52,30 @@ elseif(TARGET_PLATFORM STREQUAL "macOS Desktop")
 
   message(STATUS "Compiler: Xcode, version: " ${XCODE_VERSION})
 
-    set(CMAKE_C_FLAGS   "-Werror")
-    set(CMAKE_CXX_FLAGS "-Werror")
+  set(CMAKE_C_FLAGS   "-Werror -Weverything -pedantic-errors -Wno-missing-prototypes -Wno-c++98-compat -Wno-poison-system-directories -fshow-column -fshow-source-location -fcaret-diagnostics -fcolor-diagnostics -fdiagnostics-format=clang -fdiagnostics-show-option -fdiagnostics-show-category=id")
+  set(CMAKE_CXX_FLAGS "-Werror -Weverything -pedantic-errors -Wno-missing-prototypes -Wno-c++98-compat -Wno-poison-system-directories -fshow-column -fshow-source-location -fcaret-diagnostics -fcolor-diagnostics -fdiagnostics-format=clang -fdiagnostics-show-option -fdiagnostics-show-category=id")
+
+  set(CMAKE_C_FLAGS_DEBUG            "-g -D_DEBUG")
+  set(CMAKE_CXX_FLAGS_DEBUG          "-g -D_DEBUG")
+
+  set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -D_DEBUG")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -D_DEBUG")
+
+  set(CMAKE_C_FLAGS_RELEASE          "-O3 -DNDEBUG")
+  set(CMAKE_CXX_FLAGS_RELEASE        "-O3 -DNDEBUG")
+
+  set(CMAKE_STATIC_LINKER_FLAGS "")
+  set(CMAKE_EXE_LINKER_FLAGS    "")
+
+  set(CMAKE_STATIC_LINKER_FLAGS_DEBUG           "")
+  set(CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO  "")
+  set(CMAKE_STATIC_LINKER_FLAGS_RELEASE         "")
+
+  set(CMAKE_EXE_LINKER_FLAGS_DEBUG              "")
+  set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO     "")
+  set(CMAKE_EXE_LINKER_FLAGS_RELEASE            "")
+
+# stop on https://clang.llvm.org/docs/UsersManual.html#cmdoption-f-no-save-optimization-record
 
 endif()
 
