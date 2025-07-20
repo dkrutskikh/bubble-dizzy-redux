@@ -77,7 +77,7 @@ jobs:
           echo 'Build Number 1'
 
           # Replace anything that is not alphanumeric (either alphabets or numbers), `-` or `_` with `_`
-          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | tr -c '[:alnum:]_- ' '_' | tr -s '_')"
+          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | tr -c '[:alnum:]\-_ ' '_' | tr -s '_')"
 
           echo 'Build Number 2'
 
