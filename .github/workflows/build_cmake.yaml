@@ -75,7 +75,7 @@ jobs:
           RAW_BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
 
           # Replace anything that is not alphanumeric (either alphabets or numbers) with `-`
-          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | sed 's/[^[:alnum:]-]/-/g; s/-\+/-/g' | tr -s '-')"
+          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | sed -E 's/[^[:alnum:]-]+/-/g')"
 
           BUILD_FILE_NAME="${BUILD_FILE_NAME}-Branch-${BRANCH_NAME}-${{ github.sha }}"
 

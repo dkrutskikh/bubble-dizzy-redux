@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
-language: "ru-RU"
+language: "en-US"
 early_access: true
 enable_free_tier: true
 reviews:
