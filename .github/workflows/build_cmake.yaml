@@ -12,9 +12,13 @@ jobs:
         include:
         - name: macOS XCode
           os: macos-15
+          run_cpack: 1
+          cpack_type: RelWithDebInfo
           cmake_preset: macos-xcode-release
         - name: macOS Ninja
           os: macos-15
+          run_cpack: 1
+          cpack_type: RelWithDebInfo
           cmake_preset: macos-ninja-release
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
@@ -37,7 +41,7 @@ jobs:
 
     - name: Build Number
       run: |
-        BUILD_FILE_NAME="${GITHUB_RUN_ID}-BUBBLE-DIZZY"
+        BUILD_FILE_NAME="${GITHUB_RUN_ID}-BubbleDizzyRedux"
         BUILD_NAME_SUFFIX=""
         ENABLE_PUBLIC_RELEASE="OFF"
 
@@ -49,7 +53,7 @@ jobs:
           RAW_BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
           # Replace anything that is not alphanumeric (either alphabets or numbers), `-` or `_` with `_`
           BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | tr -c '[:alnum:]_- ' '_' | tr -s '_')"
-        	BUILD_FILE_NAME="${BUILD_FILE_NAME}-BRANCH-${BRANCH_NAME}-${{ github.sha }}"
+        	BUILD_FILE_NAME="${BUILD_FILE_NAME}-Branch-${BRANCH_NAME}-${{ github.sha }}"
         	if [ "${BRANCH_NAME}" != "main" ];
         	then
         		BUILD_NAME_SUFFIX="BRANCH ${BRANCH_NAME}"
@@ -70,6 +74,17 @@ jobs:
     - name: Configure
       run: |
         cmake --preset ${{ matrix.cmake_preset }}
+
     - name: Build
       run: |
         cmake --build --preset ${{ matrix.cmake_preset }}
+
+    - name: Pack
+      id: cpack
+      if: ${{ matrix.run_cpack == 1 }}
+      run: |
+        cd '${{github.workspace}}/out/build/${{matrix.cmake_preset}}'
+
+        cpack -C ${{ matrix.cpack_type }}
+
+        rm -rf _CPack_Packages

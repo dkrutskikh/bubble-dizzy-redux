@@ -52,6 +52,9 @@ elseif(TARGET_PLATFORM STREQUAL "macOS Desktop")
 
   message(STATUS "Compiler: Xcode, version: " ${XCODE_VERSION})
 
+    set(CMAKE_C_FLAGS   "-Werror")
+    set(CMAKE_CXX_FLAGS "-Werror")
+
 endif()
 
 if(TOYGINE_VERSION_MAJOR)

@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.31.6 FATAL_ERROR)
 
-project(BubbleDizzyRedux VERSION 0.0.0 LANGUAGES C CXX)
-
 # Remove ZERO_TEST at least BUILD_ALL remains
 set(CMAKE_SUPPRESS_REGENERATION 1)
 
@@ -39,13 +37,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set(PACKAGE_NAME_SUFFIX "" CACHE STRING "Suffix for CPack package name")
-set(PACKAGE_FILE_NAME "" CACHE STRING "Override for CPack package filename")
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/cmake")
 include(ConfigureEngine)
 include(ConfigureCompiler)
-include(ConsoleApplication)
 
 add_subdirectory(src/engine)
 add_subdirectory(src/game)
