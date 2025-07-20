@@ -13,10 +13,8 @@ jobs:
         - name: macOS XCode
           platform: macos-xcode-arm
           os: macos-15
-          run_cpack: 1
           cmake_preset: macos-xcode-release
-          cpack_type: RelWithDebInfo
-          cpack_extension: tar.gz
+
         - name: macOS Ninja
           platform: macos-ninja-arm
           os: macos-15
