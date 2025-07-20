@@ -67,15 +67,24 @@ jobs:
         BUILD_NAME_SUFFIX=""
         ENABLE_PUBLIC_RELEASE="OFF"
 
-        if [ "${{ github.event_name }}" == "pull_request" ];
+        if [ "${{ github.event_name }}" != "pull_request" ];
         then
           BUILD_FILE_NAME="${BUILD_FILE_NAME}-PR-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}"
           BUILD_NAME_SUFFIX="PR ${{ github.event.pull_request.number }}"
         else
           RAW_BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+
+          echo 'Build Number 1'
+
           # Replace anything that is not alphanumeric (either alphabets or numbers), `-` or `_` with `_`
           BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | tr -c '[:alnum:]_- ' '_' | tr -s '_')"
-        	BUILD_FILE_NAME="${BUILD_FILE_NAME}-Branch-${BRANCH_NAME}-${{ github.sha }}"
+
+          echo 'Build Number 2'
+
+          BUILD_FILE_NAME="${BUILD_FILE_NAME}-Branch-${BRANCH_NAME}-${{ github.sha }}"
+
+          echo 'Build Number 3'
+
         	if [ "${BRANCH_NAME}" != "main" ];
         	then
         		BUILD_NAME_SUFFIX="BRANCH ${BRANCH_NAME}"
