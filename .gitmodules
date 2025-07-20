@@ -1,0 +1,3 @@
+[submodule "src/engine/test/3rdparty/catch2"]
+	path = src/engine/test/3rdparty/catch2
+	url = https://github.com/catchorg/Catch2.git
