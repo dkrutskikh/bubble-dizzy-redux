@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.31.6 FATAL_ERROR)
 
-project(BubbleDizzyRedux VERSION 0.1.2 LANGUAGES C CXX)
+project(BubbleDizzyRedux VERSION 0.0.0 LANGUAGES C CXX)
 
 # Remove ZERO_TEST at least BUILD_ALL remains
 set(CMAKE_SUPPRESS_REGENERATION 1)
