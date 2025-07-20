@@ -73,15 +73,18 @@ jobs:
           BUILD_NAME_SUFFIX="PR ${{ github.event.pull_request.number }}"
         else
           RAW_BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
-          # Replace anything that is not alphanumeric (either alphabets or numbers), `-` or `_` with `_`
-          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | tr -c '[:alnum:]_- ' '_' | tr -s '_')"
-        	BUILD_FILE_NAME="${BUILD_FILE_NAME}-Branch-${BRANCH_NAME}-${{ github.sha }}"
-        	if [ "${BRANCH_NAME}" != "main" ];
-        	then
-        		BUILD_NAME_SUFFIX="BRANCH ${BRANCH_NAME}"
-        	else
+
+          # Replace anything that is not alphanumeric (either alphabets or numbers) with `-`
+          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | sed 's/[^[:alnum:]-]/-/g; s/-\+/-/g' | tr -s '-')"
+
+          BUILD_FILE_NAME="${BUILD_FILE_NAME}-Branch-${BRANCH_NAME}-${{ github.sha }}"
+
+          if [ "${BRANCH_NAME}" != "main" ];
+          then
+            BUILD_NAME_SUFFIX="BRANCH ${BRANCH_NAME}"
+          else
             ENABLE_PUBLIC_RELEASE="ON"
-        	fi
+          fi
         fi
 
         if [ "${BUILD_NAME_SUFFIX}" != "" ];
