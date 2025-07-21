@@ -90,7 +90,7 @@ if(ENABLE_TEST)
 
   FetchContent_MakeAvailable(Catch2)
 
-	add_executable(tests test.cpp)
+	add_executable(tests test/stub.test.cpp)
   target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 
   include(CTest)
