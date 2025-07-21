@@ -30,7 +30,10 @@
             "name": "macos-ninja-release",
             "displayName": "macOS Ninja release",
             "description": "Bubble Dizzy Redux MacOS Ninja",
-            "inherits": "base-release"
+            "inherits": "base-release",
+            "cacheVariables": {
+                "ENABLE_TEST": "ON"
+            }
         },
         {
             "name": "macos-xcode",
@@ -38,15 +41,6 @@
             "description": "Bubble Dizzy Redux MacOS XCode",
             "inherits": "base-release",
             "generator": "Xcode"
-        },
-        {
-            "name": "macos-ninja-debug",
-            "displayName": "macOS Ninja debug",
-            "description": "Bubble Dizzy Redux MacOS Ninja (Debug)",
-            "inherits": "macos-ninja-release",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
         },
         {
             "name": "windows-msvc",
@@ -68,6 +62,16 @@
             "architecture": {
                 "value": "Win32",
                 "strategy": "set"
+            }
+        },
+        {
+            "name": "macos-ninja-debug",
+            "displayName": "macOS Ninja debug",
+            "description": "Bubble Dizzy Redux MacOS Ninja (Debug)",
+            "inherits": "macos-ninja-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ENABLE_TEST": "ON"
             }
         }
     ],
@@ -106,6 +110,26 @@
             "name": "macos-ninja-debug",
             "configurePreset": "macos-ninja-debug",
             "inherits": "default-debug"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default-build",
+            "hidden": true,
+            "output": {
+                "shortProgress": true,
+                "verbosity": "verbose"
+            }
+        },
+        {
+            "name": "macos-ninja-release",
+            "configurePreset": "macos-ninja-release",
+            "inherits": "default-build"
+        },
+        {
+            "name": "macos-ninja-debug",
+            "configurePreset": "macos-ninja-debug",
+            "inherits": "default-build"
         }
     ]
 }

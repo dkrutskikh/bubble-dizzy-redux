@@ -17,6 +17,10 @@ set(CMAKE_RELWITHDEBINFO_POSTFIX "rd")
 set(CMAKE_USE_RELATIVE_PATHS TRUE)
 set(CMAKE_SUPPRESS_REGENERATION TRUE)
 
+#------------------------------------------------------------------------------------------------------------
+# User-provided options
+#------------------------------------------------------------------------------------------------------------
+
 # Setup configuration types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo" CACHE STRING "" FORCE)
 
@@ -24,6 +28,10 @@ set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo" CACHE STRING "" FOR
 if(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif()
+
+# Compilation options
+
+option(ENABLE_TEST "Enable compilation of unit tests" OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -67,3 +75,7 @@ endif(DEFINED PREPROCESSOR_DEFINITIONS)
 
 target_link_libraries(${LIBRARY_NAME} ${LIB_LIST})
 
+if(ENABLE_TEST)
+	enable_testing()
+	add_subdirectory(test)
+endif()
