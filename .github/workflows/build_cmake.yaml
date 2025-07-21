@@ -18,6 +18,7 @@ jobs:
         - name: macOS Ninja
           platform: macos-ninja-arm
           os: macos-15
+          run_test: 1
           run_cpack: 1
           cmake_preset: macos-ninja-release
           cpack_type: RelWithDebInfo
@@ -105,6 +106,12 @@ jobs:
     - name: Build
       run: |
         cmake --build --preset ${{ matrix.cmake_preset }}
+
+    - name: Test
+      if: ${{ matrix.run_test == 1 }}
+      continue-on-error: true
+      run: |
+        ctest --preset ${{ matrix.cmake_preset }}
 
     - name: Pack
       id: cpack
