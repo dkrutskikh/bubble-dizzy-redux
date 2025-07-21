@@ -30,27 +30,21 @@
             "name": "macos-ninja-release",
             "displayName": "macOS Ninja release",
             "description": "Bubble Dizzy Redux MacOS Ninja",
-            "inherits": "base-release"
+            "inherits": "base-release",
+            "cacheVariables": {
+                "ENABLE_TEST": "ON"
+            }
         },
         {
-            "name": "macos-xcode-release",
-            "displayName": "macOS XCode release",
+            "name": "macos-xcode",
+            "displayName": "macOS XCode",
             "description": "Bubble Dizzy Redux MacOS XCode",
             "inherits": "base-release",
             "generator": "Xcode"
         },
         {
-            "name": "macos-ninja-debug",
-            "displayName": "macOS Ninja debug",
-            "description": "Bubble Dizzy Redux MacOS Ninja (Debug)",
-            "inherits": "macos-ninja-release",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "windows-msvc-release",
-            "displayName": "Windows x64 release",
+            "name": "windows-msvc",
+            "displayName": "Windows x64",
             "description": "Bubble Dizzy Redux Windows MSVC",
             "inherits": "base-release",
             "generator": "Visual Studio 17 2022",
@@ -60,14 +54,24 @@
             }
         },
         {
-            "name": "windows-msvc-release-x86",
-            "displayName": "Windows x86 release",
+            "name": "windows-msvc-x86",
+            "displayName": "Windows x86",
             "description": "Bubble Dizzy Redux Windows MSVC x86",
             "inherits": "base-release",
             "generator": "Visual Studio 17 2022",
             "architecture": {
                 "value": "Win32",
                 "strategy": "set"
+            }
+        },
+        {
+            "name": "macos-ninja-debug",
+            "displayName": "macOS Ninja debug",
+            "description": "Bubble Dizzy Redux MacOS Ninja (Debug)",
+            "inherits": "macos-ninja-release",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "ENABLE_TEST": "ON"
             }
         }
     ],
@@ -88,24 +92,44 @@
             "inherits": "default-release"
         },
         {
-            "name": "macos-xcode-release",
-            "configurePreset": "macos-xcode-release",
+            "name": "macos-xcode",
+            "configurePreset": "macos-xcode",
             "inherits": "default-release"
         },
         {
-            "name": "windows-msvc-release",
-            "configurePreset": "windows-msvc-release",
+            "name": "windows-msvc",
+            "configurePreset": "windows-msvc",
             "inherits": "default-release"
         },
         {
-            "name": "windows-msvc-release-x86",
-            "configurePreset": "windows-msvc-release-x86",
+            "name": "windows-msvc-x86",
+            "configurePreset": "windows-msvc-x86",
             "inherits": "default-release"
         },
         {
             "name": "macos-ninja-debug",
             "configurePreset": "macos-ninja-debug",
             "inherits": "default-debug"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "default-build",
+            "hidden": true,
+            "output": {
+                "shortProgress": true,
+                "verbosity": "verbose"
+            }
+        },
+        {
+            "name": "macos-ninja-release",
+            "configurePreset": "macos-ninja-release",
+            "inherits": "default-build"
+        },
+        {
+            "name": "macos-ninja-debug",
+            "configurePreset": "macos-ninja-debug",
+            "inherits": "default-build"
         }
     ]
 }

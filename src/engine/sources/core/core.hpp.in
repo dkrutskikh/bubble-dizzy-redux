@@ -26,6 +26,11 @@
 #ifndef INCLUDE_CORE_HPP_
 #define INCLUDE_CORE_HPP_
 
+
+#include <cstdint>
+#include <cuchar>
+
+
 //------------------------------------------------------------------------------
 
 //==============================
@@ -72,5 +77,11 @@
 #undef TARGET_CPU
 
 #include "@TARGET_PLATFORM_CONFIG_HEADER@"
+
+namespace toygine
+{
+    wchar_t * utf8toWChar( wchar_t * dest, std::size_t destSize, char const * src, std::size_t srcLen );
+
+} // namespace toygine
 
 #endif // INCLUDE_CORE_HPP_

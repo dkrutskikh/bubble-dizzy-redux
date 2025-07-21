@@ -13,11 +13,12 @@ jobs:
         - name: macOS XCode
           platform: macos-xcode-arm
           os: macos-15
-          cmake_preset: macos-xcode-release
+          cmake_preset: macos-xcode
 
         - name: macOS Ninja
           platform: macos-ninja-arm
           os: macos-15
+          run_test: 1
           run_cpack: 1
           cmake_preset: macos-ninja-release
           cpack_type: RelWithDebInfo
@@ -26,12 +27,12 @@ jobs:
         - name: Windows MSVC
           platform: windows-msvc-x64
           os: windows-2025
-          cmake_preset: windows-msvc-release
+          cmake_preset: windows-msvc
 
         - name: Windows MSVC x86
           platform: windows-msvc-x86
           os: windows-2025
-          cmake_preset: windows-msvc-release-x86
+          cmake_preset: windows-msvc-x86
 
     name: CMake (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
@@ -42,6 +43,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
 
     - name: Prepare CI
       run: |
@@ -103,6 +106,12 @@ jobs:
     - name: Build
       run: |
         cmake --build --preset ${{ matrix.cmake_preset }}
+
+    - name: Test
+      if: ${{ matrix.run_test == 1 }}
+      continue-on-error: true
+      run: |
+        ctest --preset ${{ matrix.cmake_preset }}
 
     - name: Pack
       id: cpack
