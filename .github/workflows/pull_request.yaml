@@ -23,7 +23,7 @@ jobs:
     outputs:
       runCxxAnalyzers: ${{ steps.dispatch.outputs.runCxxAnalyzers }}
     steps:
-      - uses: actions/github-script@v7
+      - uses: actions/github-script@v8
         id: dispatch
         with:
           script: |
