@@ -1,1 +1,2 @@
-out
+# Compilers will place build artifacts here
+out/

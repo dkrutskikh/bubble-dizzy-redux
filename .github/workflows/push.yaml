@@ -10,12 +10,10 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
-  id-token: write
-  pages: write
-  pull-requests: write
+  contents: read
 
 jobs:
   build:
     name: Build using CMake
     uses: ./.github/workflows/build_cmake.yaml
+    secrets: inherit

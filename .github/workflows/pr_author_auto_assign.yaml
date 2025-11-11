@@ -1,8 +1,8 @@
 name: PR author auto assign
 
 on:
-  pull_request_target:
-    types: [opened, reopened]
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
 
 permissions:
   pull-requests: write
@@ -16,6 +16,6 @@ jobs:
       run:
         shell: bash
     steps:
-    - uses: toshimaru/auto-author-assign@v2.1.1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: toshimaru/auto-author-assign@v2.1.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

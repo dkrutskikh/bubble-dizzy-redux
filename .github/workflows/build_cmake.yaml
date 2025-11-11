@@ -6,119 +6,137 @@ on:
 permissions: {}
 
 jobs:
-  cmake:
+  build:
     strategy:
+      fail-fast: false
       matrix:
         include:
-        - name: macOS XCode
-          platform: macos-xcode-arm
-          os: macos-15
-          cmake_preset: macos-xcode-release
+          - name: Linux Ninja
+            os: ubuntu-24.04
+            cmake_preset: linux-ninja-release
 
-        - name: macOS Ninja
-          platform: macos-ninja-arm
-          os: macos-15
-          run_cpack: 1
-          cmake_preset: macos-ninja-release
-          cpack_type: RelWithDebInfo
-          cpack_extension: tar.gz
+          - name: macOS XCode
+            os: macos-15
+            cmake_preset: macos-xcode
 
-        - name: Windows MSVC
-          platform: windows-msvc-x64
-          os: windows-2025
-          cmake_preset: windows-msvc-release
+          - name: macOS Ninja
+            os: macos-15
+            cmake_preset: macos-ninja-release
 
-        - name: Windows MSVC x86
-          platform: windows-msvc-x86
-          os: windows-2025
-          cmake_preset: windows-msvc-release-x86
+          - name: Windows MSVC
+            os: windows-2025
+            cmake_preset: windows-msvc
 
-    name: CMake (${{ matrix.name }})
+          - name: Windows MSVC x86
+            os: windows-2025
+            cmake_preset: windows-msvc-x86
+
+          - name: DevkitPro GBA
+            os: ubuntu-latest
+            docker_image: devkitpro/devkitarm:latest
+            cmake_preset: nintendo-gba-ninja
+
+    name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     defaults:
       run:
         shell: bash
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5.0.0
+        with:
+          submodules: recursive
 
-    - name: Prepare CI
-      run: |
-        if [[ "${{ matrix.os }}" =~ "macos" ]]; then
-          brew install ninja
-        elif [[ "${{ matrix.os }}" =~ "windows" ]]; then
-          MSVC_INSTALL_PATH=$(vswhere -latest -property installationPath)
-          echo "MSVC_INSTALL_PATH = $MSVC_INSTALL_PATH"
+      - name: Prepare APT staging dir
+        if: contains(matrix.os, 'ubuntu')
+        run: mkdir -p "$RUNNER_TEMP/apt-cache"
 
-          echo "Installed toolset versions:"
-          ls -vr "$MSVC_INSTALL_PATH/VC/Tools/MSVC"
+      - name: APT cache restore
+        if: contains(matrix.os, 'ubuntu')
+        id: buildaptcache
+        uses: actions/cache/restore@v4.3.0
+        with:
+          path: ${{ runner.temp }}/apt-cache
+          key: build-${{ matrix.os }}-apt-${{ matrix.cmake_preset }}
+          restore-keys: |
+            build-${{ matrix.os }}-apt-${{ matrix.cmake_preset }}
 
-          TOOLS_DIR=$(ls -vr "$MSVC_INSTALL_PATH/VC/Tools/MSVC/" | head -1)
-          echo "TOOLS_DIR = $TOOLS_DIR"
+      - name: Prepare CI
+        run: |
+          if [[ "${{ matrix.os }}" =~ "windows" ]]; then
+            MSVC_INSTALL_PATH=$(vswhere -latest -property installationPath)
+            echo "MSVC_INSTALL_PATH = $MSVC_INSTALL_PATH"
 
-          DUMPBIN_PATH="$MSVC_INSTALL_PATH/VC/Tools/MSVC/$TOOLS_DIR/bin/Hostx64/x64/dumpbin.exe"
-          echo "DUMPBIN_PATH = $DUMPBIN_PATH"
-        fi
+            echo "Installed toolset versions:"
+            ls -vr "$MSVC_INSTALL_PATH/VC/Tools/MSVC"
 
-    - name: Build Number
-      run: |
-        BUILD_FILE_NAME="${GITHUB_RUN_ID}-BubbleDizzyRedux"
-        BUILD_NAME_SUFFIX=""
-        ENABLE_PUBLIC_RELEASE="OFF"
+            TOOLS_DIR=$(ls -vr "$MSVC_INSTALL_PATH/VC/Tools/MSVC/" | head -1)
+            echo "TOOLS_DIR = $TOOLS_DIR"
 
-        if [ "${{ github.event_name }}" == "pull_request" ];
-        then
-          BUILD_FILE_NAME="${BUILD_FILE_NAME}-PR-${{ github.event.pull_request.number }}-${{ github.event.pull_request.head.sha }}"
-          BUILD_NAME_SUFFIX="PR ${{ github.event.pull_request.number }}"
-        else
-          RAW_BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+            DUMPBIN_PATH="$MSVC_INSTALL_PATH/VC/Tools/MSVC/$TOOLS_DIR/bin/Hostx64/x64/dumpbin.exe"
+            echo "DUMPBIN_PATH = $DUMPBIN_PATH"
+          elif [[ "${{ matrix.os }}" =~ "macos" ]]; then
+            # Prefer the desired version if it exists, otherwise keep the default.
+            if [ -d "/Applications/Xcode_26.0.app" ]; then
+              sudo xcode-select -s /Applications/Xcode_26.0.app
+            fi
+          elif [[ "${{ matrix.os }}" =~ "ubuntu" ]]; then
+            set -euo pipefail
+            export DEBIAN_FRONTEND=noninteractive
 
-          # Replace anything that is not alphanumeric (either alphabets or numbers) with `-`
-          BRANCH_NAME="$(echo "$RAW_BRANCH_NAME" | sed -E 's/[^[:alnum:]-]+/-/g')"
+            APT_CACHE="${APT_CACHE:-${RUNNER_TEMP:-/tmp}/apt-cache}"
+            sudo mkdir -p "$APT_CACHE"
 
-          BUILD_FILE_NAME="${BUILD_FILE_NAME}-Branch-${BRANCH_NAME}-${{ github.sha }}"
+            sudo apt -yq -o Acquire::Retries=3 update
+            sudo apt -yq install eatmydata
 
-          if [ "${BRANCH_NAME}" != "main" ];
-          then
-            BUILD_NAME_SUFFIX="BRANCH ${BRANCH_NAME}"
-          else
-            ENABLE_PUBLIC_RELEASE="ON"
+            sudo eatmydata apt -yq --no-install-recommends \
+              -o Dir::Cache::archives="$APT_CACHE" \
+              -o APT::Keep-Downloaded-Packages=true \
+              -o Acquire::Retries=3 -o Dpkg::Use-Pty=0 \
+              install \
+              gcc-14 g++-14
+
+            sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100
+            sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
+
+            sudo rm -f  "$APT_CACHE/lock" || true
+            sudo rm -rf "$APT_CACHE/partial" || true
+            sudo chown -R "$USER:$USER" "$APT_CACHE"
           fi
-        fi
 
-        if [ "${BUILD_NAME_SUFFIX}" != "" ];
-        then
-          BUILD_NAME_SUFFIX="(${BUILD_NAME_SUFFIX})"
-        fi
+      - name: APT cache save
+        if: contains(matrix.os, 'ubuntu') && steps.buildaptcache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4.3.0
+        with:
+          path: ${{ runner.temp }}/apt-cache
+          key: ${{ steps.buildaptcache.outputs.cache-primary-key }}
 
-        echo BUILD_FILE_NAME="$BUILD_FILE_NAME" >> $GITHUB_ENV
-        echo BUILD_NAME_SUFFIX="$BUILD_NAME_SUFFIX" >> $GITHUB_ENV
-        echo ENABLE_PUBLIC_RELEASE="$ENABLE_PUBLIC_RELEASE" >> $GITHUB_ENV
+      - name: Setup MSVC developer command prompt
+        if: ${{ contains(matrix.cmake_preset, 'msvc') }}
+        uses: TheMrMilchmann/setup-msvc-dev@v4.0.0
+        with:
+          arch: ${{ contains(matrix.cmake_preset, 'x86') && 'x86' || 'x64' }}
 
-    - name: Configure
-      run: |
-        cmake --preset ${{ matrix.cmake_preset }}
+      - name: Build
+        if: ${{ matrix.docker_image == '' }}
+        run: |
+          cmake -DTOYGINE_BUILD_TESTS=$([ "${{ matrix.run_test }}" = "true" ] && echo ON || echo OFF) --preset ${{ matrix.cmake_preset }}
+          cmake --build --preset ${{ matrix.cmake_preset }}
+          if [ "${{ matrix.run_test }}" = "true" ]; then
+            ctest --preset ${{ matrix.cmake_preset }}
+          fi
 
-    - name: Build
-      run: |
-        cmake --build --preset ${{ matrix.cmake_preset }}
-
-    - name: Pack
-      id: cpack
-      if: ${{ matrix.run_cpack == 1 }}
-      run: |
-        cd '${{ github.workspace }}/out/build/${{ matrix.cmake_preset }}'
-
-        cpack -C ${{ matrix.cpack_type }}
-
-        rm -rf _CPack_Packages
-
-    - name: Artifacts
-      if: ${{ matrix.run_cpack == 1 }}
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ env.BUILD_FILE_NAME }} - ${{ matrix.platform }}
-        compression-level: 0
-        path: |
-          ${{ github.workspace }}/out/build/${{ matrix.cmake_preset }}/${{ env.BUILD_FILE_NAME }}.${{ matrix.cpack_extension }}
+      - name: Build and Test in Docker
+        if: ${{ matrix.docker_image != '' }}
+        uses: addnab/docker-run-action@v3
+        with:
+          image: ${{ matrix.docker_image }}
+          options: |
+            -v ${{ github.workspace }}:/workspace
+          run: |
+            cd /workspace
+            cmake -DTOYGINE_BUILD_TESTS=$([ "${{ matrix.run_test }}" = "true" ] && echo ON || echo OFF) --preset ${{ matrix.cmake_preset }}
+            cmake --build --preset ${{ matrix.cmake_preset }}

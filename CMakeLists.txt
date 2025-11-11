@@ -1,56 +1,97 @@
-cmake_minimum_required(VERSION 3.31.6 FATAL_ERROR)
+#-------------------------------------------------------------------------------------------
+# Copyright (c) 2025 Dmitry Krutskikh
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this
+# software and associated documentation files (the "Software"), to deal in the Software
+# without restriction, including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and / or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions :
+#
+# The above copyright notice and this permission notice shall be included in all copies or
+# substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+# PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+# FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+#-------------------------------------------------------------------------------------------
 
-project(BubbleDizzyRedux VERSION 0.0.0 LANGUAGES C CXX)
+cmake_minimum_required(VERSION 3.31.0 FATAL_ERROR)
 
-# Remove ZERO_TEST at least BUILD_ALL remains
-set(CMAKE_SUPPRESS_REGENERATION 1)
+project(BubbleDizzyRedux LANGUAGES CXX VERSION 0.0.0 HOMEPAGE_URL https://github.com/dkrutskikh/bubble-dizzy-redux)
 
-# to distinguish between debug and release builds
+# To distinguish between debug and release builds
 set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_RELWITHDEBINFO_POSTFIX "rd")
 
-# Set generate relative path  ON
-set(CMAKE_USE_RELATIVE_PATHS TRUE)
+# Disable regeneration of build system files by IDEs
 set(CMAKE_SUPPRESS_REGENERATION TRUE)
+
+# Enable projects folders
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+#-------------------------------------------------------------------------------------------
+# User-provided options
+#-------------------------------------------------------------------------------------------
 
 # Setup configuration types
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release;RelWithDebInfo" CACHE STRING "" FORCE)
 
-#------------------------------------------------------------------------------------------------------------
-# User-provided options
-#------------------------------------------------------------------------------------------------------------
+# Make default 'Release' build
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE "Release")
+endif (NOT CMAKE_BUILD_TYPE)
 
-if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
-		"Choose the type of build, options are: ${CMAKE_CONFIGURATION_TYPES}. Default is RelWithDebInfo."
-		FORCE)
-	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPES})
-endif()
-
-#------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------
 # Compile and linking options
-#------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------
 
-# Enable C++20 Globally
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/engine/cmake")
 
-# Enable C 17 Globally
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/engine/cmake")
 include(ConfigureEngine)
 include(ConfigureCompiler)
 
-add_subdirectory(src/engine)
-add_subdirectory(src/game)
+add_subdirectory(engine)
 
-#------------------------------------------------------------------------------------------------------------
-# Packaging section
-#------------------------------------------------------------------------------------------------------------
+set_target_properties(toygine PROPERTIES FOLDER "Engine")
 
-set(PACKAGE_NAME_SUFFIX "" CACHE STRING "Suffix for CPack package name")
-set(PACKAGE_FILE_NAME "" CACHE STRING "Override for CPack package filename")
-mark_as_advanced(PACKAGE_NAME_SUFFIX PACKAGE_FILE_NAME)
+#-------------------------------------------------------------------------------------------
+
+set(SRC_DIZZY_LIST game.cpp)
+set(HDR_DIZZY_LIST )
+set(INL_DIZZY_LIST )
+
+set(SRC_LIST ${SRC_DIZZY_LIST})
+set(HDR_LIST ${HDR_DIZZY_LIST})
+set(INL_LIST ${INL_DIZZY_LIST})
+set(LIB_LIST toygine)
+set(RES_LIST )
+#set(MEDIA_PATH "../../media/lastversion")
+#set(OS_DEPENDED_RESOURCES_PATH)
+#set(OS_DEPENDED_BINARY_FILES)
+set(APP_NAME BubbleDizzyRedux)
+
+source_group("Dizzy" FILES ${SRC_DIZZY_LIST} ${HDR_DIZZY_LIST} ${INL_DIZZY_LIST})
+source_group("Resources" FILES ${RES_LIST})
+
+if (TOYGINE_TARGET_PLATFORM STREQUAL "Nintendo Game Boy Advance")
+
+  add_executable(${APP_NAME} ${SRC_LIST} ${HDR_LIST} ${INL_LIST} ${RES_LIST})
+
+  gba_create_rom(${APP_NAME}
+      PAD TRUE
+      TITLE "BubbleDizzy"
+      GAMECODE "BBLD"
+      MAKERCODE "DK"
+      VERSION "1"
+      DEBUG "1"
+  )
+
+else ()
+
+  add_executable(${APP_NAME} ${SRC_LIST} ${HDR_LIST} ${INL_LIST} ${RES_LIST})
+
+endif()
+#-------------------------------------------------------------------------------------------
