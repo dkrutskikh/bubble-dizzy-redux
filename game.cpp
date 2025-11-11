@@ -25,7 +25,7 @@ int main(void) {
 
 #include <iostream>
 
-int main() {
+int __cdecl main() {
   std::cout << "\x1b[10;10HHello World!\n" << std::endl;
 
   return 0;
