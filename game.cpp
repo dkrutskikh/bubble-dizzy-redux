@@ -1,9 +1,6 @@
 #ifdef __GBA__
 
-#include <cstdio>
 #include <iostream>
-#include <string>
-#include <vector>
 
 #include <gba_console.h>
 #include <gba_input.h>
@@ -26,10 +23,7 @@ int main(void) {
 
 #else
 
-#include <cstdio>
 #include <iostream>
-#include <string>
-#include <vector>
 
 int main(void) {
   std::cout << "\x1b[10;10HHello World!\n" << std::endl;

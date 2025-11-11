@@ -199,7 +199,7 @@
         {
             "name": "nintendo-gba-ninja-debug",
             "configurePreset": "nintendo-gba-ninja-debug",
-            "inherits": "default-release"
+            "inherits": "default-debug"
         }
     ]
 }

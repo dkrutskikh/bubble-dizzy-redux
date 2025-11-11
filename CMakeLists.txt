@@ -91,7 +91,7 @@ if (TOYGINE_TARGET_PLATFORM STREQUAL "Nintendo Game Boy Advance")
 
 else ()
 
-  add_executable(${APP_NAME} WIN32 ${SRC_LIST} ${HDR_LIST} ${INL_LIST} ${RES_LIST})
+  add_executable(${APP_NAME} ${SRC_LIST} ${HDR_LIST} ${INL_LIST} ${RES_LIST})
 
 endif()
 #-------------------------------------------------------------------------------------------
