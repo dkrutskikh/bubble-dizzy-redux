@@ -25,7 +25,13 @@ int main(void) {
 
 #include <iostream>
 
-int __cdecl main() {
+#ifdef _MSC_VER
+#define MAIN_CALL __cdecl
+#else
+#define MAIN_CALL
+#endif
+
+int MAIN_CALL main() {
   std::cout << "\x1b[10;10HHello World!\n" << std::endl;
 
   return 0;
