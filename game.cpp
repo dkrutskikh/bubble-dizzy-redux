@@ -25,7 +25,7 @@ int main(void) {
 
 #include <iostream>
 
-int main(void) {
+int main(int argc, char * argv[]) {
   std::cout << "\x1b[10;10HHello World!\n" << std::endl;
 }
 

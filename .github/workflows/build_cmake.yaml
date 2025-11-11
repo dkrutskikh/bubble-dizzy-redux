@@ -120,7 +120,7 @@ jobs:
         with:
           arch: ${{ contains(matrix.cmake_preset, 'x86') && 'x86' || 'x64' }}
 
-      - name: Build and Test
+      - name: Build
         if: ${{ matrix.docker_image == '' }}
         run: |
           cmake -DTOYGINE_BUILD_TESTS=$([ "${{ matrix.run_test }}" = "true" ] && echo ON || echo OFF) --preset ${{ matrix.cmake_preset }}
